@@ -1,32 +1,32 @@
-# Thyroid Classification System
+# Thyroid Cancer Prediction System
 
-A clinical decision-support web application that predicts **Thyroid Cancer Recurrence** and assesses **Patient Risk Level** using machine learning models deployed via a Flask web interface.
+> A clinical decision-support web application that predicts **Thyroid Cancer Recurrence** and assesses **Patient Risk Level** using machine learning, deployed via a Flask web interface with an integrated AI chatbot assistant.
+
+![Python](https://img.shields.io/badge/Python-3.7+-blue?style=flat-square&logo=python)
+![Flask](https://img.shields.io/badge/Flask-Web%20App-black?style=flat-square&logo=flask)
+![XGBoost](https://img.shields.io/badge/XGBoost-Classifier-green?style=flat-square)
+![PyCaret](https://img.shields.io/badge/PyCaret-AutoML-orange?style=flat-square)
+![Scikit-learn](https://img.shields.io/badge/Scikit--learn-ML-f7931e?style=flat-square&logo=scikit-learn)
+![License](https://img.shields.io/badge/License-MIT-lightgrey?style=flat-square)
 
 ---
 
-## Table of Contents
+## Demo
 
-- [Overview](#overview)
-- [Live Demo](#live-demo)
-- [Features](#features)
-- [Dataset](#dataset)
-- [Models & Results](#models--results)
-- [Project Structure](#project-structure)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Tech Stack](#tech-stack)
-- [API Endpoints](#api-endpoints)
-- [Screenshots](#screenshots)
-- [License](#license)
+![App Demo](results/app.gif)
+
+![Web App — Recurrence Prediction](results/webapp1.png)
+![Web App — Risk Prediction](results/webapp2.png)
+![Chatbot Assistant](results/chatbot.png)
 
 ---
 
 ## Overview
 
-The **Thyroid Classification System** is a full-stack machine learning web application designed to assist medical professionals in evaluating thyroid cancer outcomes. It provides two core prediction modules:
+The **Thyroid Cancer Prediction System** is a full-stack machine learning web application designed to assist medical professionals in evaluating thyroid cancer outcomes. It provides two core prediction modules:
 
-- **Recurrence Prediction** — Predicts whether thyroid cancer is likely to recur (`Yes` / `No`) based on clinical parameters using an **XGBoost classifier**.
-- **Risk Assessment** — Classifies patients into `Low`, `High`, or `Intermediate` risk categories using a **Logistic Regression model**.
+- **Recurrence Prediction** — Predicts whether thyroid cancer is likely to recur (`Yes` / `No`) based on clinical parameters using an **XGBoost classifier**
+- **Risk Assessment** — Classifies patients into `Low`, `High`, or `Intermediate` risk categories using a **Logistic Regression model**
 
 The system also includes an integrated **AI chatbot assistant** to help users navigate the interface and understand predictions.
 
@@ -40,6 +40,52 @@ The system also includes an integrated **AI chatbot assistant** to help users na
 - **Responsive UI** — Glassmorphism-styled frontend with mobile support
 - **Preprocessing Pipeline** — Automated label encoding, age scaling, and feature selection
 - **PyCaret AutoML** — Used to benchmark and select best-performing base models
+
+---
+
+## Results
+
+| Model | Task | Accuracy |
+|-------|------|----------|
+| **XGBoost Classifier** | Recurrence Prediction | **93.15%** |
+| **Logistic Regression** | Risk Assessment | **82.19%** |
+
+### Recurrence Prediction — Classification Report (Test Set, 80/20 Split)
+
+| Class | Precision | Recall | F1-Score | Support |
+|---|---|---|---|---|
+| No Recurrence (0) | 0.98 | 0.92 | **0.95** | 51 |
+| Recurrence (1) | 0.84 | 0.95 | **0.89** | 22 |
+| **Macro Avg** | 0.91 | 0.94 | **0.92** | 73 |
+| **Weighted Avg** | 0.94 | 0.93 | **0.93** | 73 |
+
+### XGBoost Hyperparameters (Recurrence Model)
+
+```
+n_estimators     = 500
+learning_rate    = 0.03
+max_depth        = 4
+min_child_weight = 1
+subsample        = 0.8
+colsample_bytree = 0.8
+gamma            = 0.1
+reg_alpha        = 0.5
+objective        = binary:logistic
+eval_metric      = logloss
+random_state     = 42
+```
+
+### Logistic Regression Configuration (Risk Model)
+
+```
+penalty      = l2
+C            = 1.0
+solver       = liblinear
+class_weight = balanced
+max_iter     = 1000
+```
+
+Both models were selected via **PyCaret AutoML benchmarking** with 5-fold cross-validation and hyperparameter tuning.
 
 ---
 
@@ -77,63 +123,10 @@ The system also includes an integrated **AI chatbot assistant** to help users na
 
 ---
 
-## Models & Results
-
-### Recurrence Prediction — XGBoost Classifier
-
-Best model selected via PyCaret AutoML benchmarking with 5-fold cross-validation and hyperparameter tuning.
-
-**XGBoost Hyperparameters:**
-
-```
-n_estimators     = 500
-learning_rate    = 0.03
-max_depth        = 4
-min_child_weight = 1
-subsample        = 0.8
-colsample_bytree = 0.8
-gamma            = 0.1
-reg_alpha        = 0.5
-objective        = binary:logistic
-eval_metric      = logloss
-random_state     = 42
-```
-
-**Classification Report (Test Set — 80/20 Split):**
-
-| Class | Precision | Recall | F1-Score | Support |
-|---|---|---|---|---|
-| No Recurrence (0) | 0.98 | 0.92 | **0.95** | 51 |
-| Recurrence (1) | 0.84 | 0.95 | **0.89** | 22 |
-| **Macro Avg** | 0.91 | 0.94 | **0.92** | 73 |
-| **Weighted Avg** | 0.94 | 0.93 | **0.93** | 73 |
-
-**Overall Accuracy: 93.15%**
-
----
-
-### Risk Assessment — Logistic Regression
-
-Best model selected via PyCaret AutoML benchmarking with imbalance correction and 5-fold cross-validation.
-
-**Logistic Regression Configuration:**
-
-```
-penalty      = l2
-C            = 1.0
-solver       = liblinear
-class_weight = balanced
-max_iter     = 1000
-```
-
-**Overall Accuracy: 82.19%**
-
----
-
 ## Project Structure
 
 ```
-thyroid-classification-system/
+thyroid-prediction-system/
 │
 ├── app.py                          # Flask application — routes & prediction logic
 ├── requirements.txt                # Python dependencies
@@ -152,9 +145,15 @@ thyroid-classification-system/
 ├── templates/
 │   └── index.html                  # Main prediction UI
 │
-└── static/
-    └── css/
-        └── style.css               # Application styling
+├── static/
+│   └── css/
+│       └── style.css               # Application styling
+│
+└── results/
+    ├── app.gif
+    ├── webapp1.png
+    ├── webapp2.png
+    └── chatbot.png
 ```
 
 ---
@@ -170,8 +169,8 @@ thyroid-classification-system/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/thyroid-classification-system.git
-cd thyroid-classification-system
+git clone https://github.com/Bhavishas2725/THYROID-PREDICTION.git
+cd THYROID-PREDICTION
 
 # 2. (Optional) Create a virtual environment
 python -m venv venv
@@ -251,9 +250,12 @@ This notebook covers:
 
 ---
 
-## Contributing
+## Author
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+**Bhavisha S**  
+B.E. Computer Science (AI & ML) — AMET University, Chennai  
+📧 bhavishasiva272@gmail.com  
+🔗 [LinkedIn](https://linkedin.com/in/bhavishasiva-) | [GitHub](https://github.com/Bhavishas2725) | [Portfolio](https://bhavishas.netlify.app/)
 
 ---
 
@@ -273,5 +275,3 @@ This project is licensed under the [MIT License](LICENSE).
 ---
 
 > **Disclaimer:** This application is intended for research and educational purposes only. It is not a substitute for professional medical diagnosis or clinical judgment.
-
-
